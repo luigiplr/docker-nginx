@@ -49,6 +49,7 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 		--with-compat \
 		--with-file-aio \
 		--with-http_v2_module \
+		--add-module=/tmp/nginx_accept_language_module-master \
 	" \
 	&& addgroup -S nginx \
 	&& adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx \
@@ -84,6 +85,12 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 	&& mkdir -p /usr/src \
 	&& tar -zxC /usr/src -f nginx.tar.gz \
 	&& rm nginx.tar.gz \
+	# nginx_accept_language_module START
+	&& cd /tmp \
+	&& curl -fSL https://github.com/giom/nginx_accept_language_module/archive/master.zip -o nginx_accept_language_module.zip \
+	&& unzip nginx_accept_language_module.zip \
+	&& rm -f nginx_accept_language_module.zip \
+	# nginx_accept_language_module END
 	&& cd /usr/src/nginx-$NGINX_VERSION \
 	&& ./configure $CONFIG --with-debug \
 	&& make -j$(getconf _NPROCESSORS_ONLN) \
